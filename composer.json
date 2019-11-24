@@ -1,13 +1,10 @@
 {
-    "name": "morphable/routing",
-    "description": "routing lib",
+    "name": "morphable/micro",
+    "description": "micro framework",
     "minimum-stability": "stable",
     "license": "MIT",
     "require": {
-        "php" : "~7.0",
-        "psr/http-message": "^1.0",
-        "psr/http-server-handler": "^1.0",
-        "psr/http-server-middleware": "^1.0"
+        "php" : "~7.0"
     },
 	"require-dev": {
 		"phpunit/phpunit" : ">=5.4.3",
