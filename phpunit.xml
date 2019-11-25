@@ -10,7 +10,7 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="routing2 tests">
+        <testsuite name="micro framework tests">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
