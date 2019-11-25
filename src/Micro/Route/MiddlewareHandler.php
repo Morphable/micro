@@ -2,12 +2,14 @@
 
 namespace Morphable\Micro\Route;
 
-use \Morphable\Micro\Route;
 use \Psr\Http\Server\RequestHandlerInterface;
 use \Psr\Http\Message\ServerRequestInterface;
 use \Psr\Http\Message\ResponseInterface;
 
-class Handler implements RequestHandlerInterface
+/**
+ * middleware handler
+ */
+class MiddlewareHandler implements RequestHandlerInterface
 {
     protected $route;
 

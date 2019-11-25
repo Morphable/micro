@@ -25,7 +25,7 @@ class Route
      * @param string $method
      * @param string $pattern
      */
-    public function __construct(string $method, string $pattern, $callback = null, array $middleware = [])
+    public function __construct(string $method, string $pattern, $callback, array $middleware = [])
     {
         $this->method = strtoupper($method);
         $this->pattern = new Pattern($pattern);

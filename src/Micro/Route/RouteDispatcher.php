@@ -4,12 +4,15 @@ namespace Morphable\Micro\Route;
 
 use \Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\ServerRequestInterface;
-use \Psr\Http\Server\MiddlewareInterface;
 use \Psr\Container\ContainerInterface;
 use \Morphable\Micro\Route;
+use \Morphable\Micro\Route\MiddlewareHandler;
 use \Psr\Http\Server\RequestHandlerInterface;
 
-class Dispatcher implements RequestHandlerInterface
+/**
+ * route dispatcher
+ */
+class RouteDispatcher implements RequestHandlerInterface
 {
     /** @var \Symfony\Component\HttpFoundation\Request */
     protected $request;
@@ -30,6 +33,25 @@ class Dispatcher implements RequestHandlerInterface
     {
         $this->route = $route;
         $this->container = $container;
+    }
+
+
+    public function populateMiddleware($middleware)
+    {
+        $result = [];
+
+        foreach ($middleware as $callback) {
+            if ($this->container instanceof \Psr\Container\ContainerInterface) {
+                if (is_string($callback) && $this->container->has($callback)) {
+                    $result[] = $this->container->get($callback);
+                    continue;
+                }
+            }
+
+            $result[] = $callback;
+        }
+
+        return $result;
     }
 
     /**
@@ -63,17 +85,6 @@ class Dispatcher implements RequestHandlerInterface
     }
 
     /**
-     * match route
-     *
-     * @param ServerRequestInterface $request
-     * @return bool
-     */
-    public function match(ServerRequestInterface $request)
-    {
-        return $this->route->match($request);
-    }
-
-    /**
      * dispatch route with middleware
      *
      * @param ServerRequestInterface $request
@@ -81,6 +92,6 @@ class Dispatcher implements RequestHandlerInterface
      */
     public function dispatch(ServerRequestInterface $request): ResponseInterface
     {
-        return (new Handler($this->route->getMiddleware(), $this))->handle($request);
+        return (new MiddlewareHandler($this->populateMiddleware($this->route->getMiddleware()), $this))->handle($request);
     }
 }
