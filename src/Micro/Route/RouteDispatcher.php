@@ -79,6 +79,9 @@ class RouteDispatcher implements RequestHandlerInterface
                 if (method_exists($containerItem, end($callback))) {
                     return $containerItem->{end($callback)}(...$args);
                 }
+            // __invoke
+            } elseif (is_string($callback) && $this->container->has($callback)) {
+                $callback = $this->container->get($callback);
             }
         }
 

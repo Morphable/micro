@@ -41,6 +41,11 @@ class BController {
     public function someAction($request, $args) {
         return $this->idk->idkWhatImDoing();
     }
+
+    public function __invoke($request, $args)
+    {
+        return $this->idk->idkWhatImDoing();
+    }
 }
 
 // create request
@@ -63,9 +68,7 @@ $micro->setContainer($container);
 
 $router = $micro->routing();
 
-$router->add('GET', '/', function ($req, $args = []) {
-    die('home');
-})->middleware(['middleware']);
+$router->add('GET', '/', ['controller', 'someAction'])->middleware(['middleware']);
 
 $router->group('api', function ($router) {
     
