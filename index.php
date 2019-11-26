@@ -61,7 +61,26 @@ $container->add('controller', BController::class)->addArgument('idk');
 $micro = new \Morphable\Micro();
 $micro->setContainer($container);
 
-$micro->route('GET', '/do/a/:thing', ['controller', 'someAction'])->addMiddleware('middleware');
+$router = $micro->routing();
+
+$router->route('GET', '/', function ($req, $args = []) {
+    die('home');
+})->addMiddleware(['middleware']);
+
+$router->group('api', function ($router) {
+    
+    $router->group('user', function ($router) {
+        $router->route('GET', '/edit', function () {
+            die('edit');
+        });
+     });
+
+    $router->route('GET', '/user/:id', function ($req, $args = []) {
+        die($args['id']);
+    });
+
+})->addMiddleware('middleware');
+
 
 try {
     $response = $micro->handle($request);

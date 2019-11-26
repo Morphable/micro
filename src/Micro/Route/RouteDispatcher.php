@@ -35,7 +35,12 @@ class RouteDispatcher implements RequestHandlerInterface
         $this->container = $container;
     }
 
-
+    /**
+     * get middleware from container 
+     *
+     * @param array $middleware
+     * @return array
+     */
     public function populateMiddleware($middleware)
     {
         $result = [];
@@ -64,11 +69,7 @@ class RouteDispatcher implements RequestHandlerInterface
     {
         $callback = $this->route->getCallback();
 
-        $args = [
-            $request,
-            new \Nyholm\Psr7\Factory\Psr17Factory(),
-            $this->route->getArguments($request)
-        ];
+        $args = [ $request, $this->route->getArguments($request) ];
 
         if ($this->container instanceof \Psr\Container\ContainerInterface) {
             // specific method

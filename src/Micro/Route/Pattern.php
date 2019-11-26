@@ -41,6 +41,28 @@ class Pattern
     {
         return trim(explode('?', $pattern)[0], '/');
     }
+
+    /**
+     * get route pattern
+     *
+     * @return string
+     */
+    public function getPattern()
+    {
+        return $this->pattern;
+    }
+
+    /**
+     * add prefix to pattern
+     *
+     * @param string $prefix
+     * @return self
+     */
+    public function addPrefix($prefix)
+    {
+        $this->pattern = self::normalize('/' . trim($prefix, '/') . '/' . trim($this->pattern));
+        return $this;
+    }
     
     /**
      * parse pattern
