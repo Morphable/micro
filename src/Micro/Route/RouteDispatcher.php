@@ -36,7 +36,7 @@ class RouteDispatcher implements RequestHandlerInterface
     }
 
     /**
-     * get middleware from container 
+     * get middleware from container
      *
      * @param array $middleware
      * @return array
@@ -96,6 +96,9 @@ class RouteDispatcher implements RequestHandlerInterface
      */
     public function dispatch(ServerRequestInterface $request): ResponseInterface
     {
-        return (new MiddlewareHandler($this->populateMiddleware($this->route->getMiddleware()), $this))->handle($request);
+        return (new MiddlewareHandler(
+            $this->populateMiddleware($this->route->getMiddleware()),
+            $this
+        ))->handle($request);
     }
 }
