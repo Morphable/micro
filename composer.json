@@ -27,7 +27,7 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Morphable\\": "tests/"
+			"Test\\": "tests/"
 		}
 	},
 	"scripts": {
