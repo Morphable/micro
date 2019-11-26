@@ -63,30 +63,30 @@ $micro->setContainer($container);
 
 $router = $micro->routing();
 
-$router->route('GET', '/', function ($req, $args = []) {
+$router->add('GET', '/', function ($req, $args = []) {
     die('home');
-})->addMiddleware(['middleware']);
+})->middleware(['middleware']);
 
 $router->group('api', function ($router) {
     
     $router->group('user', function ($router) {
         
-        $router->route('GET', '/', function () {
+        $router->add('GET', '/', function () {
             die('user index');
         });
 
-        $router->route('GET', '/edit', function () {
+        $router->add('GET', '/edit', function () {
             die('edit');
         });
 
-        $router->route('GET', '/:id', function ($req, $args) {
+        $router->add('GET', '/:id', function ($req, $args) {
             die($args['id']);
-        });
+        })->middleware('middleware');
      });
-})->addMiddleware('middleware');
+})->middleware('middleware');
 
 
-$router->route('get', '/channel/callback/?:method', function ($req, $args) {
+$router->add('get', '/channel/callback/?:method', function ($req, $args) {
     echo '<pre>';
     print_r($args);
     echo '</pre>';

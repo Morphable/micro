@@ -59,7 +59,7 @@ class Pattern
      * @param string $prefix
      * @return self
      */
-    public function addPrefix($prefix)
+    public function prefix($prefix)
     {
         $this->pattern = self::normalize('/' . trim($prefix, '/') . '/' . trim($this->pattern));
         return $this;

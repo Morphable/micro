@@ -39,7 +39,7 @@ class Route
      * @param mixed $middleware
      * @return self
      */
-    public function addMiddleware($middleware)
+    public function middleware($middleware)
     {
         if (is_array($middleware)) {
             $this->middleware = array_merge($this->middleware, $middleware);

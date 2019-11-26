@@ -37,7 +37,7 @@ class Routing
      * @param array $middleware
      * @return Route
      */
-    public function route(string $method, string $pattern, $callback, array $middleware = [])
+    public function add(string $method, string $pattern, $callback, array $middleware = [])
     {
         $method = strtoupper($method);
         $route = new Route($method, $pattern, $callback, $middleware);
@@ -68,7 +68,7 @@ class Routing
      * @param string $prefix
      * @return self
      */
-    public function addPrefix($prefix)
+    public function prefix($prefix)
     {
         $this->prefix = '/' . trim($prefix, '/') . '/' . trim($this->prefix, '/');
         return $this;
@@ -80,7 +80,7 @@ class Routing
      * @param array|string $middleware
      * @return self
      */
-    public function addMiddleware($middleware)
+    public function middleware($middleware)
     {
         if (is_array($middleware)) {
             $this->middleware = array_merge($this->middleware, $middleware);
@@ -102,15 +102,15 @@ class Routing
         $result = [];
         foreach ($this->routes as $route) {
             // build routes
-            $route->addMiddleware($this->middleware);
-            $route->getPattern()->addPrefix($this->prefix);
+            $route->middleware($this->middleware);
+            $route->getPattern()->prefix($this->prefix);
             $result[] = $route;
         }
 
         // add groups
         foreach ($this->groups as $group) {
-            $group->addPrefix($this->prefix);
-            $group->addMiddleware($this->middleware);
+            $group->prefix($this->prefix);
+            $group->middleware($this->middleware);
             $result = array_merge($result, $group->getRoutes());
         }
 
