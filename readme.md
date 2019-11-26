@@ -32,14 +32,7 @@ try {
 ```php
 <?php
 
-use \Morphable\Micro;
 use \Psr\Http\Message\ServerRequestInterface;
-
-/** @link https://www.php-fig.org/psr/psr-11/ */
-$micro = new Micro();
-$micro->setContainer($container) // psr
-
-$router = $micro->routing();
 
 // specific method in controller
 $router->add('GET', '/user/:id', ['controller', 'method']);
@@ -65,6 +58,8 @@ $router->add('GET', '/user/:id', function (ServerRequestInterface $request, arra
 
 ### Route pattern
 ```php
+<?php
+
 // : is mandatory argument ?: is optional argument
 $router->add('GET', '/user/:userId/profile', function ($request, $args){
     $args['userId'] // second parameter in url
@@ -79,14 +74,9 @@ $router->add('GET', '/callback/?:channel', function ($request, $args) {
 ```php
 <?php
 
-use \Morphable\Micro;
+use \Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\ServerRequestInterface;
 use \Psr\Http\Server\MiddlewareInterface;
-
-$micro = new Micro();
-$micro->setContainer($container) // psr
-
-$router = $micro->routing();
 
 /** @link https://www.php-fig.org/psr/psr-15/ */
 class Middleware implements MiddlewareInterface
@@ -105,15 +95,6 @@ $router->add('GET', '/user/:id', ['controller', 'method'])
 ### Groups
 ```php
 <?php
-
-use \Morphable\Micro;
-use \Psr\Http\Message\ServerRequestInterface;
-use \Psr\Http\Server\MiddlewareInterface;
-
-$micro = new Micro();
-$micro->setContainer($container) // psr
-
-$router = $micro->routing();
 
 $router->group('api', function ($router) { // prefix of api
 
