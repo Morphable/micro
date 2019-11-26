@@ -8,6 +8,7 @@ use \Morphable\Micro\Route;
 use \Psr\Http\Server\RequestHandlerInterface;
 use \Morphable\Micro\Route\Dispatcher;
 
+
 require __DIR__ . '/vendor/autoload.php';
 
 class A implements MiddlewareInterface {
