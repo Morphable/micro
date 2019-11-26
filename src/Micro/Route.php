@@ -61,9 +61,11 @@ class Route
         if ($this->method !== $request->getServerParams()['REQUEST_METHOD']) {
             return false;
         }
+
+        $path = explode('?', $request->getServerParams()['REQUEST_URI']);
+        $path = '/' . Pattern::normalize(reset($path));
         
         $regex = $this->pattern->getRegex();
-        $path = '/' . Pattern::normalize($request->getServerParams()['REQUEST_URI']);
 
         if (!preg_match($regex, $path)) {
             return false;

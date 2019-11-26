@@ -5,6 +5,7 @@ namespace Morphable\Micro\Route;
 class Pattern
 {
     const ARGUMENT_PREFIX = ':';
+    const ARGUMENT_OPTIONAL = '?:';
 
     /** @var string */
     protected $pattern;
@@ -37,9 +38,9 @@ class Pattern
      * @param string $pattern
      * @return string
      */
-    public static function normalize($pattern)
+    public static function normalize($pattern = '')
     {
-        return trim(explode('?', $pattern)[0], '/');
+        return trim($pattern, '/');
     }
 
     /**
@@ -77,7 +78,14 @@ class Pattern
             foreach ($this->params as $index => $param) {
                 // match on anything
                 if ($param == '') {
-                    $this->regex .= "\/[^\/]*";
+                    $this->regex .= "\/";
+                    continue;
+                }
+
+                // optional, saves as argument
+                if (substr($param, 0, 2) == self::ARGUMENT_OPTIONAL) {
+                    $this->regex .= "(\/[^\/]*)?";
+                    $this->arguments[substr($param, 2)] = $index;
                     continue;
                 }
 

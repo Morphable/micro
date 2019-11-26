@@ -70,17 +70,28 @@ $router->route('GET', '/', function ($req, $args = []) {
 $router->group('api', function ($router) {
     
     $router->group('user', function ($router) {
+        
+        $router->route('GET', '/', function () {
+            die('user index');
+        });
+
         $router->route('GET', '/edit', function () {
             die('edit');
         });
+
+        $router->route('GET', '/:id', function ($req, $args) {
+            die($args['id']);
+        });
      });
-
-    $router->route('GET', '/user/:id', function ($req, $args = []) {
-        die($args['id']);
-    });
-
 })->addMiddleware('middleware');
 
+
+$router->route('get', '/channel/callback/?:method', function ($req, $args) {
+    echo '<pre>';
+    print_r($args);
+    echo '</pre>';
+    die;
+})->match($request);
 
 try {
     $response = $micro->handle($request);

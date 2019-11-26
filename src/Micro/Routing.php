@@ -55,12 +55,23 @@ class Routing
      */
     public function group($prefix, $callback)
     {
-        $prefix = '/' . trim($this->prefix, '/') . '/' . trim($prefix, '/');
-
-        $routing = new self($prefix, $this->middleware);
-        $this->groups[] = $routing;
+        $routing = new self($prefix);
         $callback($routing);
+        $this->groups[] = $routing;
+        
         return $routing;
+    }
+
+    /**
+     * add prefix to current route
+     *
+     * @param string $prefix
+     * @return self
+     */
+    public function addPrefix($prefix)
+    {
+        $this->prefix = '/' . trim($prefix, '/') . '/' . trim($this->prefix, '/');
+        return $this;
     }
 
     /**
@@ -98,6 +109,8 @@ class Routing
 
         // add groups
         foreach ($this->groups as $group) {
+            $group->addPrefix($this->prefix);
+            $group->addMiddleware($this->middleware);
             $result = array_merge($result, $group->getRoutes());
         }
 
