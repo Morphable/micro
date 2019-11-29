@@ -16,16 +16,19 @@ class Routing
     /** @var array */
     protected $middleware = [];
 
+    protected $after = [];
+
     /**
      * construct
      *
      * @param string $prefix
      * @param array $middleware
      */
-    public function __construct($prefix = '/', $middleware = [])
+    public function __construct($prefix = '/', $middleware = [], $after = [])
     {
         $this->prefix = $prefix;
         $this->middleware = $middleware;
+        $this->after = $after;
     }
 
     /**
@@ -80,14 +83,16 @@ class Routing
      * @param array|string $middleware
      * @return self
      */
-    public function middleware($middleware)
+    public function middleware($callback)
     {
-        if (is_array($middleware)) {
-            $this->middleware = array_merge($this->middleware, $middleware);
-            return $this;
-        }
+        $this->middleware[] = $callback;
 
-        $this->middleware[] = $middleware;
+        return $this;
+    }
+
+    public function after($callback)
+    {
+        $this->after[] = $callback;
 
         return $this;
     }
@@ -102,15 +107,31 @@ class Routing
         $result = [];
         foreach ($this->routes as $route) {
             // build routes
-            $route->middleware($this->middleware);
             $route->getPattern()->prefix($this->prefix);
+
+            foreach ($this->middleware as $callback) {
+                $route->middleware($callback);
+            }
+
+            foreach ($this->after as $callback) {
+                $route->after($callback);
+            }
+
             $result[] = $route;
         }
 
         // add groups
         foreach ($this->groups as $group) {
             $group->prefix($this->prefix);
-            $group->middleware($this->middleware);
+
+            foreach ($this->middleware as $callback) {
+                $group->middleware($callback);
+            }
+
+            foreach ($this->after as $callback) {
+                $group->after($callback);
+            }
+
             $result = array_merge($result, $group->getRoutes());
         }
 

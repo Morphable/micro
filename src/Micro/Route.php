@@ -17,7 +17,10 @@ class Route
     protected $callback;
 
     /** @var array */
-    protected $middleware;
+    protected $middleware = [];
+
+    /** @var array */
+    protected $after = [];
 
     /**
      * construct
@@ -41,12 +44,21 @@ class Route
      */
     public function middleware($middleware)
     {
-        if (is_array($middleware)) {
-            $this->middleware = array_merge($this->middleware, $middleware);
-            return $this;
-        }
-
         $this->middleware[] = $middleware;
+
+        return $this;
+    }
+
+    /**
+     * append callback after execution
+     *
+     * @param mixed $callback
+     * @return self
+     */
+    public function after($after)
+    {
+        $this->after[] = $after;
+
         return $this;
     }
 
@@ -130,5 +142,15 @@ class Route
     public function getMiddleware()
     {
         return $this->middleware;
+    }
+
+    /**
+     * get after callbacks
+     *
+     * @return array
+     */
+    public function getAfter()
+    {
+        return $this->after;
     }
 }

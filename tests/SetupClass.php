@@ -34,8 +34,16 @@ class SetupClass extends TestCase
             }
         };
 
+        $after = new Class {
+            public function doACall($request, $args, $response)
+            {
+                echo 'after';
+            }
+        };
+
         self::$container->add('middleware', $middleware);
         self::$container->add('controller', $controller);
+        self::$container->add('after', $after);
 
         self::mockRequest('GET', '/admin');
     }

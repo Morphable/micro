@@ -22,7 +22,7 @@ $router->add('GET', '/user/:id', function (ServerRequestInterface $request, arra
 
 
 try {
-    $response = $micro->handle(); // \Psr\Http\Message\ResponseInterface
+    $response = $micro->handle($request); // \Psr\Http\Message\ResponseInterface
 } catch (\Exception $e) {
     // 404
 }

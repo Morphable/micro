@@ -59,18 +59,8 @@ class RouteDispatcher implements RequestHandlerInterface
         return $result;
     }
 
-    /**
-     * final handler
-     *
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
-    public function handle(ServerRequestInterface $request): ResponseInterface
+    public function call($callback, ...$args)
     {
-        $callback = $this->route->getCallback();
-
-        $args = [ $request, $this->route->getArguments($request) ];
-
         if ($this->container instanceof \Psr\Container\ContainerInterface) {
             // specific method
             if (is_array($callback) && $this->container->has(reset($callback))) {
@@ -89,6 +79,24 @@ class RouteDispatcher implements RequestHandlerInterface
     }
 
     /**
+     * final handler
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function handle(ServerRequestInterface $request): ResponseInterface
+    {
+        return $this->call(
+            $this->route->getCallback(), 
+            ...[
+                $request,
+                $this->route->getArguments($request)
+            ]
+        );
+       
+    }
+
+    /**
      * dispatch route with middleware
      *
      * @param ServerRequestInterface $request
@@ -96,9 +104,15 @@ class RouteDispatcher implements RequestHandlerInterface
      */
     public function dispatch(ServerRequestInterface $request): ResponseInterface
     {
-        return (new MiddlewareHandler(
-            $this->populateMiddleware($this->route->getMiddleware()),
-            $this
-        ))->handle($request);
+        $response = (new MiddlewareHandler($this->populateMiddleware($this->route->getMiddleware()), $this))->handle($request);
+        
+
+        if (!empty($this->route->getAfter())) {
+            foreach ($this->route->getAfter() as $callback) {
+                $this->call($callback, $request, $this->route->getArguments($request), $response);
+            }
+        }
+
+        return $response;
     }
 }

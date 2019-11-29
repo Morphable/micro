@@ -65,4 +65,30 @@ class ClientTest extends SetupClass
 
         $this->assertSame((string) $response->getBody(), 'middleware');
     }
+
+    public function testAfter()
+    {
+        $client = new Micro();
+        $client->setContainer(self::$container);
+
+        $router = $client->routing();
+
+        $router->add('GET', '/test', ['controller', 'test'])
+            ->middleware('middleware')
+            ->middleware('middleware')
+            ->after(['after', 'doACall']);
+
+        $request = self::mockRequest('GET', '/test');
+        
+        ob_start();
+
+        try {
+            $response = $client->handle($request);
+        } catch (\Exception $e) {
+        }
+
+        $s = \ob_get_clean();
+
+        $this->assertSame($s, 'after');
+    }
 }
