@@ -89,7 +89,7 @@ class Middleware implements MiddlewareInterface
 }
 
 $router->add('GET', '/user/:id', ['controller', 'method'])
-    ->middleware('middleware'); // from container, can be string or array
+    ->middleware('middleware'); // from container
 ```
 
 ### Groups
@@ -102,8 +102,18 @@ $router->group('api', function ($router) { // prefix of api
 
     $router->group('user', function ($router) {
         $router->add('GET', '/:id', ['controller', 'method']); // pattern: /api/user/:id
-    })->middleware(['middleware']);
+    })->middleware('middleware');
 
 })->middleware('middleware'); // counts for every route inside
 
+```
+
+### After call
+```php
+<?php
+
+$router->add('GET', '/', ['controller', 'method'])
+    ->after(function ($reqest, $args, $response): void {})
+    ->after(['class', 'method'])
+    ->after('function');
 ```
